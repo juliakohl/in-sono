@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "597032476664",
+    "project_id": "in-sono",
+    "storage_bucket": "in-sono.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597032476664:android:5f7047b8ccb81e8527000d",
+        "android_client_info": {
+          "package_name": "com.juliakohl.in_sono"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "597032476664-ijm6d7rkdllb14p2lvhvlr55o6b7nacm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAhPWaCUfXug8Vdr2aMpzlfCp83YNp4ng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "597032476664-ijm6d7rkdllb14p2lvhvlr55o6b7nacm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
