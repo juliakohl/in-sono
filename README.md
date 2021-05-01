@@ -9,4 +9,4 @@ The goal is to develop a flutter app, that takes text input and outputs audio fi
 
 ## Tools
 
-The app will be using the Google text2speech tool and the firebase ML Kit.
+The app will be using the Google text2speech tool and the Vision API.
