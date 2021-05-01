@@ -16,7 +16,6 @@ class CreateScreen extends StatefulWidget {
 class _CreateScreenState extends State<CreateScreen> {
 
   File _image;
-  String _uploadedFileURL;
   final picker = ImagePicker();
   
   Future takeImage() async {
@@ -48,8 +47,8 @@ class _CreateScreenState extends State<CreateScreen> {
     print(filePath+_image.path);
     try {
       await firebase_storage.FirebaseStorage.instance
-          .ref('images/file-to-upload.png')
-          .putFile(file);
+          .ref('images/image.png')
+          .putFile(_image);
       print('uploaded file');
     } on firebase_core.FirebaseException catch (e) {
       // e.g, e.code == 'canceled'
