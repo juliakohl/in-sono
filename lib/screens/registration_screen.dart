@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_sono/components/rounded_button.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:in_sono/screens/home_screen.dart';
 
 import '../constants.dart';
 
@@ -12,14 +13,13 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  //final _auth = FirebaseAuth.instance;
+  final _auth = FirebaseAuth.instance;
   String email;
   String password;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -60,17 +60,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
             RoundedButton(
               title: 'Register',
-              colour: Colors.blueAccent,
               onPressed: () async {
                 // TODO: add firebase registration
-                /*try{
+                try{
                   final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
                   if(newUser!=null){
-                    Navigator.pushNamed(context, ChatScreen.id);
+                    Navigator.pushNamed(context, HomeScreen.id);
                   }
                 }catch(e){
                   print(e);
-                }*/
+                }
                 print(email);
                 print(password);
               },

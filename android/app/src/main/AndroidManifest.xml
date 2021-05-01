@@ -2,6 +2,7 @@
     package="com.juliakohl.in_sono">
    <application
         android:label="in_sono"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

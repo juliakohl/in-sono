@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_sono/components/rounded_button.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:in_sono/screens/home_screen.dart';
 
 import '../constants.dart';
 
@@ -12,14 +13,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  //final _auth = FirebaseAuth.instance;
+  final _auth = FirebaseAuth.instance;
   String email;
   String password;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -60,16 +60,15 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             RoundedButton(
               title: 'Log In',
-              colour: Colors.lightBlueAccent,
               onPressed: () async {
                 // TODO: add firebase log in
-                /*try {
+                try {
                   UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(
                       email: email,
                       password: password
                   );
                   if(user!=null){
-                    Navigator.pushNamed(context, ChatScreen.id);
+                    Navigator.pushNamed(context, HomeScreen.id);
                   }
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'user-not-found') {
@@ -79,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   } else {
                     print(e);
                   }
-                }*/
+                }
                 print(email);
               },),
           ],

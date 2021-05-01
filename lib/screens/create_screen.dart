@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:firebase_core/firebase_core.dart' as firebase_core;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:image_picker/image_picker.dart';
 import 'package:in_sono/components/rounded_button.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
+import 'package:path/path.dart' as Path;
 
 class CreateScreen extends StatefulWidget {
   static const String id = 'create_screen';
@@ -10,100 +14,190 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
-  int _selectedIndex = 1;
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Audio',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Create',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: Text',
-      style: optionStyle,
-    ),
-  ];
 
-  void _onItemTapped(int index) {
+  File _image;
+  String _uploadedFileURL;
+  final picker = ImagePicker();
+  
+  Future takeImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
     setState(() {
-      _selectedIndex = index;
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
     });
   }
-  //final _auth = FirebaseAuth.instance;
-  String email;
-  String password;
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future<void> uploadFile(String filePath) async {
+    File file = File('${Path.basename(filePath)}}');
+    print(filePath+_image.path);
+    try {
+      await firebase_storage.FirebaseStorage.instance
+          .ref('images/file-to-upload.png')
+          .putFile(file);
+      print('uploaded file');
+    } on firebase_core.FirebaseException catch (e) {
+      // e.g, e.code == 'canceled'
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Add a new text source'),
-        backgroundColor: Colors.deepPurpleAccent,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              height: 200.0,
-              width: double.infinity,
-            ),
-            IconButton(
-              icon: const Icon(Icons.camera_alt, color: Colors.white,),
-              tooltip: 'You can use your camera to scan any text you have in front of you.',
-              onPressed: () {
-                print('camera opened');
-              },
-            ),
-            Text('Scan text with camera', style: TextStyle(color: Colors.white),),
-            SizedBox(
-              height: 48.0,
-              width: double.infinity,
-            ),
-            IconButton(
-              icon: const Icon(Icons.file_upload, color: Colors.white,),
-              tooltip: 'You can upload a document in xy format as a text source.',
-              onPressed: () {
-                print('document added');
-              },
-            ),
-            Text('Scan text with camera', style: TextStyle(color: Colors.white),),
-            SizedBox(
-              height: 96.0,
-              width: double.infinity,
-            ),
-            RoundedButton(title: 'Continue to the next step', colour: Colors.deepPurpleAccent, onPressed: () { print('continue to create step 2');}),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF1F1F1F),
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.headset),
-            label: 'Audio',
+    return SafeArea(
+      child:
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 50.0,
+            width: double.infinity,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Add New',
+          Container(
+            height: 150.0,
+            child: _image == null
+                ? Text('No image selected.')
+                : Image.file(_image),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.format_align_center),
-            label: 'Text',
+          SizedBox(
+            height: 50.0,
+            width: double.infinity,
           ),
+          IconButton(
+            icon: const Icon(Icons.camera_alt, color: Colors.white,),
+            tooltip: 'You can use your camera to scan any text you have in front of you.',
+            onPressed: () {
+              onPressed: takeImage();
+            },
+          ),
+          Text('Take a photo', style: TextStyle(color: Colors.white),),
+          SizedBox(
+            height: 48.0,
+            width: double.infinity,
+          ),
+          IconButton(
+            icon: const Icon(Icons.file_upload, color: Colors.white,),
+            tooltip: 'You can upload a document in xy format as a text source.',
+            onPressed: () {
+              onPressed: getImage();
+            },
+          ),
+          Text('Upload image from gallery', style: TextStyle(color: Colors.white),),
+          SizedBox(
+            height: 96.0,
+            width: double.infinity,
+          ),
+          RoundedButton(title: 'Continue to the next step', onPressed: () { uploadFile(_image.path);}),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.deepPurpleAccent,
-        unselectedItemColor: Colors.white70,
-        onTap: _onItemTapped,
       ),
     );
   }
 }
+
+/*
+class Uploader extends StatefulWidget {
+  Uploader({Key key}) : super(key: key);
+  @override
+  _UploaderState createState() => _UploaderState();
+}
+
+class _UploaderState extends State<Uploader> {
+
+
+  @override
+  Widget build(BuildContext context) {
+    if(_uploadTask != null ) {
+      return Icon(Icons.check_circle);
+    } else {
+      return FlatButton.icon(label: Text('Upload png'), icon: Icon(Icons.cloud_upload), onPressed: _startUpload);
+    }
+    return Container();
+  }
+}
+
+
+class ImageCapture extends StatefulWidget {
+  @override
+  _ImageCaptureState createState() => _ImageCaptureState();
+}
+
+class _ImageCaptureState extends State<ImageCapture> {
+
+  File _imageFile;
+
+  Future<void> _pickImage(ImageSource source) async {
+    File selected = await ImagePicker.getImage(source:source);
+
+    setState(() {
+      _imageFile = selected;
+    });
+  }
+
+  Future <void> _cropImage() async {
+    File cropped = await ImageCropper.cropImage(
+        sourcePath: _imageFile.path
+    );
+
+    setState(() {
+      _imageFile = cropped ?? _imageFile;
+    });
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+
+Center(
+        child: Column(
+          children: <Widget>[
+            Text('Selected Image'),
+            _image != null
+                ? Image.asset(
+              _image.path,
+              height: 150,
+            )
+                : Container(height: 150),
+            _image == null
+                ? TextButton(
+              child: Text('Choose File'),
+              onPressed: getImage,
+            )
+                : Container(),
+            _image != null
+                ? TextButton(
+              child: Text('Upload File'),
+              onPressed: takeImage,
+            )
+                : Container(),
+            Text('Uploaded Image'),
+            _uploadedFileURL != null
+                ? Image.network(
+              _uploadedFileURL,
+              height: 150,
+            )
+                : Container(),
+          ],
+        ),
+      ),
+
+
+*/
